@@ -28,7 +28,7 @@ if __name__ == "__main__":
     model = ConvNet().to(ctx)
     model.load_state_dict(torch.load('convnet_emnist.pth'))
     model.eval()
-    image = preprocess_image("k.png").to(ctx)
+    image = preprocess_image("manual_data/k_L.png").to(ctx)
     with torch.no_grad():
         output = model(image)
         predicted_label = torch.argmax(output, dim=1)

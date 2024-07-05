@@ -21,8 +21,9 @@ def preprocess_image(image_path):
 
 if __name__ == "__main__":
     label_map = {}
-    for i, letter in enumerate(list(string.ascii_lowercase)):
-        label_map[i] = f"{letter}"
+    for i, letter in enumerate(zip(list(string.ascii_lowercase), list(string.ascii_uppercase))):
+        lower, upper = letter
+        label_map[i] = f"{upper}/{lower}"
     ctx = get_device()
     model = ConvNet().to(ctx)
     model.load_state_dict(torch.load('convnet_emnist.pth'))

@@ -1,6 +1,5 @@
 .idea
 *.iml
 venv
-*.png
 data
 *.pth

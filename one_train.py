@@ -6,9 +6,24 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 import torch.multiprocessing as mp
-
+from torchvision.transforms import functional as f
 from device import get_device
 from networks import ConvNet
+
+
+class Rotate90CounterClockwise:
+    def __call__(self, x):
+        return f.rotate(x, angle=-90)
+
+
+class HorizontalFlip:
+    def __call__(self, x):
+        return f.hflip(x)
+
+
+class InvertTensor:
+    def __call__(self, x):
+        return -x
 
 
 def main():
@@ -19,9 +34,11 @@ def main():
 
     # Define the transformation to apply to the images
     transform = transforms.Compose([
-        # transforms.RandomRotation(360),
+        Rotate90CounterClockwise(),  # Rotate letter data to vertical position
+        HorizontalFlip(),  # Data seems mirrored
         transforms.ToTensor(),
-        transforms.Normalize((0.5,), (0.5,))
+        transforms.Normalize([0.5], [0.5]),
+        InvertTensor()  # Manual test data in repo is white background, black marking
     ])
 
     # Disable ssl so the dataset download works
@@ -32,7 +49,7 @@ def main():
     test_dataset = datasets.EMNIST(root='data', split='letters', train=False, download=True, transform=transform)
 
     # Create data loaders for training and testing
-    train_loader = DataLoader(dataset=train_dataset, batch_size=64, shuffle=True, num_workers=1)
+    train_loader = DataLoader(dataset=train_dataset, batch_size=128, shuffle=True, num_workers=1)
     test_loader = DataLoader(dataset=test_dataset, batch_size=64, shuffle=False, num_workers=1)
 
     # Initialize the neural network
@@ -68,6 +85,7 @@ def main():
         print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {running_loss / len(train_loader):.4f}')
     end = datetime.datetime.now()
     print(end - start)
+
     # Evaluating the model
     model.eval()
     correct = 0

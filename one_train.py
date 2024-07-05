@@ -7,13 +7,15 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 import torch.multiprocessing as mp
 
+from device import get_device
 from networks import ConvNet
 
 
 def main():
     mp.set_start_method('spawn', force=True)
 
-    ctx = torch.device("mps")
+    ctx = get_device()
+    print(ctx)
 
     # Define the transformation to apply to the images
     transform = transforms.Compose([

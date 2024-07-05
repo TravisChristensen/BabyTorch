@@ -2,6 +2,8 @@ import torch
 import string
 from torchvision import transforms
 from PIL import Image
+
+from device import get_device
 from networks import ConvNet
 
 
@@ -21,7 +23,7 @@ if __name__ == "__main__":
     label_map = {}
     for i, letter in enumerate(list(string.ascii_lowercase)):
         label_map[i] = f"{letter}"
-    ctx = torch.device("mps")
+    ctx = get_device()
     model = ConvNet().to(ctx)
     model.load_state_dict(torch.load('convnet_emnist.pth'))
     model.eval()

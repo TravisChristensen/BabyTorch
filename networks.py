@@ -11,7 +11,7 @@ class SimpleNN(nn.Module):
         self.drop2 = nn.Dropout(0.5)
         self.fc3 = nn.Linear(800, 800)
         self.drop3 = nn.Dropout(0.5)
-        self.fc4 = nn.Linear(800, 26)
+        self.fc4 = nn.Linear(800, 27)
 
     def forward(self, x):
         x = x.view(-1, 28 * 28)  # Flatten the image
@@ -34,7 +34,7 @@ class ConvNet(nn.Module):
         self.dropout1 = nn.Dropout(0.5)
         self.fc1 = nn.Linear(self.conv_final * 7 * 7, 256)
         self.dropout2 = nn.Dropout(0.5)
-        self.fc2 = nn.Linear(256, 26)
+        self.fc2 = nn.Linear(256, 27)
 
     def forward(self, x):
         x = self.pool(torch.relu(self.conv1(x)))
